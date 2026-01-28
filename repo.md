@@ -36,4 +36,4 @@ In my ansible role manage_openjdk I want to create a new file under tasks. It wi
 
 ## PR链接
 
-待创建
+https://github.com/ncepudlgc/b1387_pre/pull/1
