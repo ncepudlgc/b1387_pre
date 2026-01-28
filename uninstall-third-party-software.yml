@@ -1,0 +1,26 @@
+- hosts: all
+  become: true
+  become_user: root
+
+  pre_tasks:
+    - debug:
+        msg: "Start of third party software uninstalls"
+    
+    - include_tasks: tasks/prep.yml
+
+  roles:
+    - role: manage_openjdk
+      vars:
+        operation: uninstall
+
+  tasks:
+    - name: Uninstall rest of third party software
+      dnf:
+        name: "{{ item.name }}"
+        state: absent
+      loop: "{{ third_party_packages }}"
+      when: not item.has_config
+
+  post_tasks:
+    - debug:
+        msg: "End of third party software uninstalls"

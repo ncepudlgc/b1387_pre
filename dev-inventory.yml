@@ -1,0 +1,10 @@
+all:
+  children:
+    primary:
+      hosts:
+        172.17.32.224: # change to hostname of managed node
+          ansible_user: lab # change to user with sudo capability besides root
+    secondary:
+      hosts:
+        172.17.32.220: # change to hostname of managed node
+          ansible_user: lab # change to user with sudo capability besides root

@@ -1,0 +1,9 @@
+- name: Ensure EPEL is installed
+  dnf:
+    name: epel-release
+    state: latest
+    update_cache: yes
+
+- name: Gather installed package facts
+  package_facts:
+    manager: auto

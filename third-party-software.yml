@@ -1,0 +1,51 @@
+- hosts: all
+  become: true
+  become_user: root
+
+  handlers:
+    - name: Restart all managed third party services
+      service:
+        name: "{{ item.service }}"
+        state: restarted
+        enabled: true
+      loop: "{{ third_party_packages }}"
+      listen: verify restart
+
+  pre_tasks:
+    - debug:
+        msg: "Start of third party software installs"
+    
+    - include_tasks: tasks/prep.yml
+
+  roles:
+    - role: manage_openjdk
+      vars:
+        operation: install
+
+  tasks:
+    - name: Install third party software with no config needed
+      dnf:
+        name: "{{ item.name }}"
+        state: latest
+        update_cache: yes
+      loop: "{{ third_party_packages }}"
+      when:
+        - item.name not in ansible_facts.packages
+        - not item.has_config
+      notify: verify restart
+
+    - name: List of packages already installed
+      debug:
+        msg: "Package '{{ item.name }}' is already installed"
+      loop: "{{ third_party_packages }}"
+      when: item.name in ansible_facts.packages
+
+    - name: List of packages installed
+      debug:
+        msg: "Package '{{ item.name }}' was successfully installed"
+      loop: "{{ third_party_packages }}"
+      when: item.name not in ansible_facts.packages
+
+  post_tasks:
+    - debug:
+        msg: "End of third party software installs"

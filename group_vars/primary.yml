@@ -1,0 +1,13 @@
+java_version: 17
+third_party_packages:
+  - name: cockpit
+    service: cockpit.socket
+    has_config: no
+
+  - name: tomcat
+    service: tomcat
+    has_config: no
+
+  - name: sssd
+    service: sssd
+    has_config: no

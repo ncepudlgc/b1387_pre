@@ -1,0 +1,7 @@
+- name: Source config script
+  become: true
+  become_user: "{{ ansible_user }}"
+  shell: "source {{ java_config_script }}"
+  args:
+    executable: /bin/bash
+  listen: apply config

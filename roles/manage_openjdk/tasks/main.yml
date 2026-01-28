@@ -1,0 +1,21 @@
+- name: Install OpenJDK package
+  dnf:
+    name: "java-{{ java_version }}-openjdk"
+    state: latest
+    update_cache: yes
+  when: operation == "install"
+  notify: verify restart
+
+- name: Generate Java environment script
+  template:
+    src: java.sh.j2
+    dest: "{{ java_config_script }}"
+    mode: '0644'
+  when: operation == "install"
+  notify: apply config
+
+- name: Uninstall OpenJDK package
+  dnf:
+    name: "java-{{ java_version }}-openjdk"
+    state: absent
+  when: operation == "uninstall"

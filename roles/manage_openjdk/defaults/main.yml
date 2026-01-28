@@ -1,0 +1,4 @@
+operation: install
+
+java_version: 17
+java_package_name: "java-{{ java_version }}-openjdk"
