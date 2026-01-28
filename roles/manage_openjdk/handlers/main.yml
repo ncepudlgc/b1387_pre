@@ -5,3 +5,20 @@
   args:
     executable: /bin/bash
   listen: apply config
+
+- name: Restart tomcat service
+  systemd:
+    name: "{{ tomcat_service_name | default('tomcat') }}"
+    state: restarted
+  register: tomcat_restart_result
+  listen: restart tomcat
+
+- name: Get tomcat restart time
+  command: date -Iseconds
+  register: tomcat_restart_time_result
+  listen: restart tomcat
+
+- name: Set tomcat restart time fact
+  set_fact:
+    tomcat_restart_time: "{{ tomcat_restart_time_result.stdout }}"
+  listen: restart tomcat

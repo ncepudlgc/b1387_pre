@@ -1,0 +1,25 @@
+---
+# Task file to output package details and restart tomcat service
+- name: Get installed OpenJDK package details
+  command: dnf info "java-{{ java_version }}-openjdk"
+  register: package_info
+  when: operation == "install"
+  changed_when: false
+
+- name: Display installed package details
+  debug:
+    msg: "{{ package_info.stdout_lines }}"
+  when: operation == "install" and package_info is defined
+
+- name: Restart tomcat service after package installation
+  notify: restart tomcat
+  when: operation == "install"
+
+- name: Flush handlers to ensure tomcat restart executes
+  meta: flush_handlers
+  when: operation == "install"
+
+- name: Display tomcat restart time
+  debug:
+    msg: "Tomcat service was restarted at: {{ tomcat_restart_time | default('Time not available') }}"
+  when: operation == "install"
